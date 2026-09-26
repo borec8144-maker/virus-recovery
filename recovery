@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RECOVERY NODE</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background: #020202;
+    color: #ddd;
+    font-family: "Courier New", monospace;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.panel {
+    width: min(850px, 92%);
+    border: 1px solid #450000;
+    background: #070707;
+    padding: 35px;
+    box-shadow: 0 0 50px rgba(255,0,0,.15);
+}
+
+.header {
+    color: #ff1717;
+    font-size: clamp(25px, 5vw, 48px);
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.warning {
+    margin-top: 8px;
+    color: #666;
+}
+
+.console {
+    margin-top: 30px;
+    background: #000;
+    padding: 20px;
+    color: #67ff7b;
+    line-height: 1.7;
+}
+
+.progress {
+    margin-top: 25px;
+    height: 18px;
+    background: #151515;
+    border: 1px solid #333;
+}
+
+.progressBar {
+    width: 0%;
+    height: 100%;
+    background: #a00000;
+    transition: width 1s linear;
+}
+
+.countdown {
+    margin-top: 15px;
+    color: #ff3333;
+    text-align: center;
+    font-size: 20px;
+}
+
+.keyArea {
+    display: none;
+    text-align: center;
+    margin-top: 30px;
+    border: 1px dashed #490000;
+    padding: 20px;
+}
+
+.key {
+    color: #70ff8a;
+    font-size: clamp(30px, 7vw, 58px);
+    letter-spacing: 6px;
+    margin-top: 10px;
+    word-break: break-all;
+}
+
+.small {
+    margin-top: 15px;
+    color: #666;
+    font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="panel">
+
+    <div class="header">
+        YOUR DATA IS ENCRYPTED
+    </div>
+
+    <div class="warning">
+        RECOVERY NODE // SECURE CONNECTION
+    </div>
+
+    <div class="console" id="console">
+
+        [BOOT] recovery node online<br>
+        [LINK] encrypted channel accepted<br>
+        [WARN] recovery payload sealed<br>
+        [SCAN] validating session...<br>
+        [WAIT] recovery payload remains locked
+
+    </div>
+
+    <div class="progress">
+        <div class="progressBar" id="bar"></div>
+    </div>
+
+    <div class="countdown" id="countdown">
+        PAYLOAD UNLOCKS IN 01:00
+    </div>
+
+    <div class="keyArea" id="keyArea">
+
+        RECOVERY PAYLOAD UNLOCKED
+
+        <div class="key" id="key">
+            UNKNOWN
+        </div>
+
+        <div class="small">
+            RETURN TO THE GAME AND ENTER THIS RECOVERY KEY
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const params =
+    new URLSearchParams(window.location.search)
+
+const key =
+    params.get("key") || "UNKNOWN"
+
+const WAIT_TIME = 60
+
+let remaining =
+    WAIT_TIME
+
+const bar =
+    document.getElementById("bar")
+
+const countdown =
+    document.getElementById("countdown")
+
+const keyArea =
+    document.getElementById("keyArea")
+
+const keyElement =
+    document.getElementById("key")
+
+function update() {
+
+    const progress =
+        ((WAIT_TIME - remaining) / WAIT_TIME) * 100
+
+    bar.style.width =
+        progress + "%"
+
+    if (remaining > 0) {
+
+        const minutes =
+            Math.floor(remaining / 60)
+
+        const seconds =
+            remaining % 60
+
+        countdown.textContent =
+            "PAYLOAD UNLOCKS IN " +
+            String(minutes).padStart(2, "0") +
+            ":" +
+            String(seconds).padStart(2, "0")
+
+        remaining--
+
+        setTimeout(update, 1000)
+
+    } else {
+
+        bar.style.width = "100%"
+
+        countdown.textContent =
+            "PAYLOAD UNLOCKED"
+
+        countdown.style.color =
+            "#70ff8a"
+
+        keyElement.textContent =
+            key
+
+        keyArea.style.display =
+            "block"
+    }
+}
+
+update()
+
+</script>
+
+</body>
+</html>
